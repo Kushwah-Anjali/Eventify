@@ -32,7 +32,6 @@ export default function Events() {
     fetchEvents();
   }, []);
   const todayStr = new Date().toISOString().slice(0, 10);
-
   const formattedEvents = useMemo(() => {
     return events.map((e) => ({
       ...e,
@@ -41,7 +40,6 @@ export default function Events() {
       isPastEvent: e.date < todayStr,
     }));
   }, [events, todayStr]);
-
   const { upcoming, today, past } = useMemo(() => {
     const upcoming = formattedEvents.filter((e) => e.dateRaw > todayStr);
     const today = formattedEvents.filter((e) => e.dateRaw === todayStr);
@@ -97,32 +95,28 @@ export default function Events() {
             ))}
           </div>
         </div>
-
-    
-
-
-<div className="row g-4">
-  {filteredEvents.length > 0 ? (
-    filteredEvents.map((event, index) => (
-      <motion.div
-        key={event.id}
-        className="col-md-6 col-lg-4 d-flex"
-        initial={{ opacity: 0, y: isMobile ? 30 : 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{
-          duration: isMobile ? 0.9 : 1.2,  // faster on mobile
-          delay: index * (isMobile ? 0.1 : 0.2), // stagger adjusted
-          ease: "easeOut",
-        }}
-      >
-        <EventsCard event={event} />
-      </motion.div>
-    ))
-  ) : (
-    <p className="text-center text-white">No events found.</p>
-  )}
-</div>
+        <div className="row g-4">
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event, index) => (
+              <motion.div
+                key={event.id}
+                className="col-md-6 col-lg-4 d-flex"
+                initial={{ opacity: 0, y: isMobile ? 30 : 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: isMobile ? 0.9 : 1.2, // faster on mobile
+                  delay: index * (isMobile ? 0.1 : 0.2), // stagger adjusted
+                  ease: "easeOut",
+                }}
+              >
+                <EventsCard event={event} />
+              </motion.div>
+            ))
+          ) : (
+            <p className="text-center text-white">No events found.</p>
+          )}
+        </div>
       </div>
     </section>
   );
