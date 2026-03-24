@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Navbar, Nav, Container, Offcanvas } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { FaHome, FaEnvelope, FaUserCircle } from "react-icons/fa";
 import Logo from "./Logo";
 import "../styles/Header.css";
-
 const navLinks = [
   { path: "/", label: "Home", icon: FaHome },
   { path: "/contact", label: "Contact", icon: FaEnvelope },
@@ -40,14 +39,11 @@ const Header = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [showCanvas, setShowCanvas] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => {
-      // “Have I scrolled more than 50 pixels?”
       const isScrolled = window.scrollY > 50;
       setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -71,10 +67,7 @@ const Header = () => {
             <Logo width={40} height={40} />
             <span className="ms-2">Eventify</span>
           </Navbar.Brand>
-
           <Navbar.Toggle onClick={() => setShowCanvas(true)} />
-
-          {/* Desktop Nav */}
           <Navbar.Collapse className="justify-content-end d-none d-lg-flex">
             <Nav>
               <NavItems isActive={isActive} />
@@ -82,8 +75,6 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-
-      {/* Mobile Offcanvas */}
       <Offcanvas
         show={showCanvas}
         onHide={() => setShowCanvas(false)}
@@ -91,7 +82,7 @@ const Header = () => {
         className="bg-dark text-light"
       >
         <Offcanvas.Header closeButton closeVariant="white">
-          <Offcanvas.Title className="d-flex align-items-center gap-2">
+          <Offcanvas.Title className="d-flex fw-bold align-items-center gap-2">
             <Logo width={40} height={40} />
             Eventify
           </Offcanvas.Title>
