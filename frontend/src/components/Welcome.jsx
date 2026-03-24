@@ -1,15 +1,12 @@
 import React from "react";
 import "../styles/Welcome.css";
 import welcomeImg from "../assets/images/WelcomeImg.jpg";
-
-
 const Welcome = () => {
   return (
     <section className="position-relative overflow-hidden welcome text-light py-5">
       <div className="gradientGlow"></div>
 
       <div className="container d-flex flex-wrap align-items-center justify-content-between py-5">
-
         {/* Text content */}
         <div
           className="flex-fill mb-4 mb-lg-0"
@@ -39,8 +36,10 @@ const Welcome = () => {
           </h1>
 
           <p className="text-light mb-4">
-            Manage, plan, and organize your events seamlessly.<br />
-            From college fests to workshops and hackathons,<br />
+            Manage, plan, and organize your events seamlessly.
+            <br />
+            From college fests to workshops and hackathons,
+            <br />
             everything in one place – simple, modern, and efficient.
           </p>
 
@@ -49,7 +48,6 @@ const Welcome = () => {
           </a>
         </div>
 
-        {/* Image */}
         <div
           className="flex-fill welcomeImage"
           style={{ maxWidth: "500px" }}
@@ -59,12 +57,12 @@ const Welcome = () => {
           data-aos-easing="ease-out-cubic"
         >
           <img
+            draggable={false}
             src={welcomeImg}
             alt="Welcome"
             className="img-fluid rounded shadow"
           />
         </div>
-
       </div>
     </section>
   );
