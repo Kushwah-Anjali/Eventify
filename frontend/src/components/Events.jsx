@@ -3,7 +3,6 @@ import EventsCard from "./EventsCard";
 import "../styles/Events.css";
 import axios from "axios";
 import { motion } from "framer-motion";
-
 const Base_url = process.env.REACT_APP_API_URL;
 function formatDate(dateStr) {
   if (!dateStr) return "Date TBD";
@@ -59,15 +58,11 @@ export default function Events() {
         return formattedEvents;
     }
   }, [filter, upcoming, today, past, formattedEvents]);
-
   return (
     <section className="events-section py-5" id="event-section">
       <div className="container">
-        {/* Filter Buttons */}
         <div className="events-filter-section">
           <h2 className="filter-heading mb-4">Filter Your Events</h2>
-
-          {/* Mobile Dropdown */}
           <div className="filter-dropdown d-md-none mb-4">
             <select
               className="filter-select"
@@ -105,8 +100,8 @@ export default function Events() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{
-                  duration: isMobile ? 0.9 : 1.2, // faster on mobile
-                  delay: index * (isMobile ? 0.1 : 0.2), // stagger adjusted
+                  duration: isMobile ? 0.9 : 1.2, 
+                  delay: index * (isMobile ? 0.1 : 0.2), 
                   ease: "easeOut",
                 }}
               >

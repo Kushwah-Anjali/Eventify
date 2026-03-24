@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import RegisterModal from "./RegisterModal";
 import "../styles/Events.css";
-const Base_url=process.env.REACT_APP_API_URL;
+const Base_url = process.env.REACT_APP_API_URL;
 export default function EventsCard({ event }) {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
-  const handleRegisterClick = () => setShowModal(true);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const handleRegisterClick = () => setShowRegisterModal(true);
   const handleHistoryClick = () =>
     navigate("/event-history", { state: { eventId: event.id } });
-  const handleCloseModal = () => setShowModal(false);
+  const handleCloseModal = () => setShowRegisterModal(false);
   const handleMapClick = () => {
     navigate("/map", {
       state: {
@@ -42,7 +42,6 @@ export default function EventsCard({ event }) {
           </div>
         )}
 
-        {/* Overlay Title & Action Button */}
         <div className="position-absolute bottom-0 start-0 w-100 px-3 pb-3 d-flex justify-content-between align-items-center text-white z-3">
           <h5 className="fw-bold mb-0 text-shadow">
             {event.title || "Event Title"}
@@ -72,7 +71,6 @@ export default function EventsCard({ event }) {
           <span>{event.date || "Date TBD"}</span>
         </div>
 
-        {/* Hover Description */}
         <div className="event-hover position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white text-center px-3">
           <small>
             {event.isPastEvent
@@ -81,7 +79,7 @@ export default function EventsCard({ event }) {
           </small>
         </div>
       </div>
-      {/* LOCATION CHIP (Bootstrap-Optimized) */}
+
       <div
         className="location-chip d-flex align-items-center position-absolute top-0 end-0 m-2"
         onClick={handleMapClick}
@@ -92,11 +90,9 @@ export default function EventsCard({ event }) {
 
         <span className="expand-info text-white small ms-2">{event.venue}</span>
       </div>
-
-      {/* Modal */}
       <RegisterModal
-      key={showModal}
-        show={showModal}
+        key={showRegisterModal}
+        show={showRegisterModal}
         handleClose={handleCloseModal}
         eventId={event.id}
       />
