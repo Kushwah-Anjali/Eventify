@@ -4,7 +4,6 @@ import "../styles/Hero.css";
 const Hero = () => {
   useEffect(() => {
     const hero = document.querySelector(".hero-section");
-
     const handleScroll = () => {
       const scaleValue = 1 + window.scrollY * 0.0005;
       hero.style.setProperty("--scroll-scale", scaleValue);
