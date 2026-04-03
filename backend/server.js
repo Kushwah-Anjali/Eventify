@@ -8,8 +8,6 @@ const db = require("./config/db");
 const path = require("path");
 
 
-// Load environment variables from the .env file so we can use secret info safely
-
 app.use(
   "/events",
   express.static("D:/Gallery-Event-Management/events") // full absolute path

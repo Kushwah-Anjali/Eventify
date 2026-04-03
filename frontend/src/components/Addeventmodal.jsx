@@ -143,13 +143,12 @@ export default function AddEventModal({
         break;
 
       case "author":
-  updatedValue = value.replace(/[^a-zA-Z\s]/g, "");
-  setErrors((prev) => ({
-    ...prev,
-    author: updatedValue ? "" : "Organizer is required",
-  }));
-  break;
-
+        updatedValue = value.replace(/[^a-zA-Z\s]/g, "");
+        setErrors((prev) => ({
+          ...prev,
+          author: updatedValue ? "" : "Organizer is required",
+        }));
+        break;
 
       case "date":
         const today = new Date().toISOString().split("T")[0];
@@ -450,35 +449,32 @@ export default function AddEventModal({
                   {renderCheckIcon("author")}
                 </div>
 
-                <label className="form-label fw-semibold">
-                  <FaMapMarkerAlt className="me-2 text-primary" /> Event
-                  Location *
-                </label>
-                <div className="small text-muted mb-1">
-                  Select location by clicking on the map below
-                </div>
-
-                <div className="input-group mb-3">
-                  <span className="input-group-text">
-                    <FaMapMarkerAlt className="text-primary" />
-                  </span>
+                <div className="mb-3">
+                  <label className="form-label fw-semibold">
+                    <FaMapMarkerAlt className="me-2 text-primary" />
+                    Event Location <span className="star">*</span>
+                  </label>
 
                   <input
+                    type="text"
                     name="venue"
-                    value={data.venue || ""}
-                    readOnly
+                    value={
+                      data.venue
+                        ? data.venue
+                        : data.latitude && data.longitude
+                        ? `Lat: ${data.latitude}, Lng: ${data.longitude}`
+                        : ""
+                    }
                     className={`form-control ${
                       errors.venue ? "is-invalid" : ""
                     }`}
-                    placeholder="Click map to select location"
+                    readOnly
+                    placeholder="Click on map to select location"
                   />
-                  {errors.venue && (
-                    <div className="invalid-feedback">{errors.venue}</div>
-                  )}
 
-                  {data.latitude && data.longitude && (
-                    <div className="small text-success mt-1">
-                      📍 Location selected successfully
+                  {errors.venue && (
+                    <div className="invalid-feedback d-block">
+                      {errors.venue}
                     </div>
                   )}
                 </div>
@@ -490,23 +486,23 @@ export default function AddEventModal({
                         ...d,
                         latitude: lat,
                         longitude: lng,
-                        venue: address || `Lat: ${lat}, Lng: ${lng}`,
+                        venue: address || "",
                       }));
 
                       setErrors((e) => ({ ...e, venue: "" }));
 
-                    Swal.fire({
-  icon: address ? "success" : "info",
-  title: address ? "Venue location set" : "Location pinned",
-  text: address
-    ? address
-    : "Latitude and longitude saved successfully",
-  timer: 1400,
-  showConfirmButton: false,
-});
-
+                      Swal.fire({
+                        icon: address ? "success" : "info",
+                        title: address
+                          ? "Venue location set"
+                          : "Location pinned",
+                        text:
+                          address ||
+                          "Latitude and longitude saved successfully",
+                        timer: 1400,
+                        showConfirmButton: false,
+                      });
                     }}
-                    
                     initialPosition={
                       data.latitude && data.longitude
                         ? {
@@ -518,8 +514,8 @@ export default function AddEventModal({
                     height={280}
                   />
 
-                  <div className="small text-muted mt-1">
-                    Click any point on the map to update location.
+                  <div className="form-text">
+                    Click on the map to update the event location.
                   </div>
                 </div>
 

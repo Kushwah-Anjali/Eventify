@@ -1,21 +1,15 @@
 const db = require("../config/db");
-
-// ✅ Check if email already registered for event
-
 exports.checkEmail = async (req, res) => {
   try {
     const { email, event_id } = req.body;
-
     if (!email || !event_id)
       return res
         .status(400)
         .json({ status: "error", message: "Missing email or event ID." });
-
     const [rows] = await db.query(
       "SELECT * FROM registrations WHERE email = ? AND event_id = ?",
       [email, event_id]
     );
-
     if (rows.length > 0)
       return res.json({
         status: "found",

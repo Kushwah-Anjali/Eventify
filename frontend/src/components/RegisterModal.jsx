@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
 import {
   FaEnvelope,
   FaArrowRight,
@@ -10,34 +9,27 @@ import {
   FaUser,
   FaUserPlus,
 } from "react-icons/fa";
-const Base_url=process.env.REACT_APP_API_URL;
+const Base_url = process.env.REACT_APP_API_URL;
 export default function RegisterModal({ show, handleClose, eventId }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!isEmailChecked) {
       try {
         setLoading(true);
-        const res = await fetch(
-          `${Base_url}/api/register/check-email`,
-          { 
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, event_id: eventId }),
-          }
-        );
+        const res = await fetch(`${Base_url}/api/register/check-email`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, event_id: eventId }),
+        });
         const data = await res.json();
-
         if (data.status === "found") {
           const userName = data.data[0].name;
           handleClose();
-
           return navigate("/register-details", {
             state: {
               name: userName,
@@ -47,7 +39,6 @@ export default function RegisterModal({ show, handleClose, eventId }) {
             },
           });
         }
-
         setIsEmailChecked(true);
       } catch (error) {
         console.error("Error checking email:", error);
@@ -56,7 +47,6 @@ export default function RegisterModal({ show, handleClose, eventId }) {
       }
     } else {
       let userName = name;
-
       try {
         setLoading(true);
         const res = await fetch(`${Base_url}/api/register/new`, {
@@ -113,7 +103,7 @@ export default function RegisterModal({ show, handleClose, eventId }) {
           <h5 className="modal-title fw-bold d-flex align-items-center gap-2 ms-2">
             {" "}
             <FaUserPlus className="text-light" />
-            Register Here         
+            Register Here
           </h5>
           <Button
             variant="close"
@@ -142,7 +132,6 @@ export default function RegisterModal({ show, handleClose, eventId }) {
             </Form.Group>
           )}
 
-        
           {isEmailChecked && (
             <Form.Group className="mb-3">
               <Form.Label className="fw-semibold d-flex align-items-center gap-2">

@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
-
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -13,14 +12,10 @@ import UserEvents from "./pages/UserEvents";
 import RegisterDetails from "./pages/RegisterDetails";
 import EventHistory from "./pages/EventHistory";
 import HistoryPageAdmin from "./pages/HistoryPageAdmin";
-import './App.css';
+import "./App.css";
 import RegisterAdminView from "./pages/RegisterAdminView";
-import 'leaflet/dist/leaflet.css';
-import MapPage from "./pages/Mappage";
-
-
+import Mappage from "./pages/Mappage";
 function App() {
-
   useEffect(() => {
     AOS.init({
       duration: 1500,
@@ -37,13 +32,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/users" element={<Users />} />
         <Route path="/userevents" element={<UserEvents />} />
-          <Route path="/register-details" element={<RegisterDetails />} />
-    <Route path="/event-history" element ={<EventHistory />}/>
-  <Route path="/history" element={<HistoryPageAdmin />} />
-<Route path="/RegisterAdminView" element={<RegisterAdminView />} />
-
-<Route path="/map" element={<MapPage />} />
-
+        <Route path="/register-details" element={<RegisterDetails />} />
+        <Route path="/event-history" element={<EventHistory />} />
+        <Route path="/history" element={<HistoryPageAdmin />} />
+        <Route path="/RegisterAdminView" element={<RegisterAdminView />} />
+        <Route path="/map" element={<Mappage />} />
       </Routes>
       <Footer />
     </Router>

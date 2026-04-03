@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {
-  GoogleMap,
-  Marker,
-  useJsApiLoader,
-} from "@react-google-maps/api";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
-export default function MapPicker({
-  onSelect,
-  initialPosition,
-  height = 300,
-}) {
+export default function MapPicker({ onSelect, initialPosition, height = 300 }) {
   const [markerPos, setMarkerPos] = useState(null);
-
+  console.log(process.env.REACT_APP_GOOGLE_MAPS_KEY);
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY,
+    googleMapsApiKey: "",
   });
 
-  const center =
-    markerPos ||
+  const center = markerPos ||
     initialPosition || {
       lat: 28.6139,
       lng: 77.209,
@@ -32,31 +23,14 @@ export default function MapPicker({
     }
   }, [initialPosition]);
 
-  const reverseGeocode = async (lat, lng) => {
-    const geocoder = new window.google.maps.Geocoder();
-
-    return new Promise((resolve) => {
-      geocoder.geocode(
-        { location: { lat, lng } },
-        (results, status) => {
-          if (status === "OK" && results?.length) {
-            resolve(results[0].formatted_address);
-          } else {
-            resolve(null);
-          }
-        }
-      );
-    });
-  };
-
-  const handleMapClick = async (e) => {
+  const handleMapClick = (e) => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
 
     setMarkerPos({ lat, lng });
 
-    const address = await reverseGeocode(lat, lng);
-    onSelect({ lat, lng, address });
+    // ONLY send lat & lng
+    onSelect({ lat, lng });
   };
 
   if (!isLoaded) {

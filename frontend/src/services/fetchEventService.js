@@ -4,7 +4,6 @@ const Base_url=process.env.REACT_APP_API_URL;
 
 export async function fetchEvent(eventId) {
   if (!eventId) return null;
-
   try {
     const { data } = await axios.get(
       `${Base_url}/api/events/event/${eventId}`

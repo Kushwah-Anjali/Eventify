@@ -16,32 +16,27 @@ function RegisterDetails() {
   const location = useLocation();
   const navigate = useNavigate();
   const { name, email, eventId, registered_at } = location.state || {};
-
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => {
-  const load = async () => {
-    setLoading(true);
-    const data = await fetchEvent(eventId);
+    const load = async () => {
+      setLoading(true);
+      const data = await fetchEvent(eventId);
+      setEvent(data);
+      setLoading(false);
+    };
 
-    console.log(data); 
-
-    setEvent(data);
-    setLoading(false);
-  };
-
-  if (eventId) load();
-}, [eventId]);
-
+    if (eventId) load();
+  }, [eventId]);
 
   const formatEventDate = (dateString) => {
     if (!dateString) return "Not specified";
-
     const options = { day: "numeric", month: "short", year: "numeric" };
     return new Date(dateString).toLocaleDateString("en-GB", options);
   };
+
 
   return (
     <div className="register-bg" style={{ background: "#0d0d4d" }}>
@@ -157,7 +152,8 @@ function RegisterDetails() {
                             <div>
                               <div className="text-muted small">Event Date</div>
                               <div className="fw-semibold">
-                                {formatEventDate(event.date)}
+                                {formatEventDate(event.date)
+                              }
                               </div>
                             </div>
                           </div>

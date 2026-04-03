@@ -115,7 +115,6 @@ body.modal-open {
 
 }
 
-/* Textarea tweaks */
 .form-input-group textarea {
   min-height: 120px;
   resize: vertical;

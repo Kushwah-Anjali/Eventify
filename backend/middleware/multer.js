@@ -1,13 +1,10 @@
-// multer.js
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-
 const baseDir = "D:/Gallery-Event-Management";
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    let folder = "events"; // default
+    let folder = "events";
 
     if (req.baseUrl.includes("register")) {
       folder = "documents";

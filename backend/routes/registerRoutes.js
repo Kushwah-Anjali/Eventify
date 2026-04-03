@@ -4,7 +4,6 @@ const { checkEmail, register,handleDocuments,getEventRegistrations } = require("
 const upload = require("../middleware/multer");
 router.post("/check-email", checkEmail);
 router.post("/new", register);
-// 🔥 SINGLE DOCUMENT SYNC API
 router.post(
   "/handle-documents",
   upload.any(),

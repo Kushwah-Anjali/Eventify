@@ -1,17 +1,12 @@
-// controllers/authController.js
-const db = require("../config/db");
-const bcrypt = require("bcrypt"); // used to compare password
-const jwt = require("jsonwebtoken"); // used to create token
 
-// Secret key for JWT (in production, store in .env file)
+const db = require("../config/db");
+const bcrypt = require("bcrypt"); 
+const jwt = require("jsonwebtoken"); 
 const JWT_SECRET = "your_super_secret_key";
 
-// POST /login
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Step 1: Validate input
     if (!email || !password) {
       return res
         .status(400)

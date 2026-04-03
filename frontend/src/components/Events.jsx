@@ -1,20 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import EventsCard from "./EventsCard";
+import dayjs from "dayjs";
 import "../styles/Events.css";
 import axios from "axios";
 import { motion } from "framer-motion";
 const Base_url = process.env.REACT_APP_API_URL;
-function formatDate(dateStr) {
-  if (!dateStr) return "Date TBD";
-  const cleanDate = dateStr.split("T")[0];
-  const [year, month, day] = cleanDate.split("-");
-  // in js month start from 0
-  const date = new Date(year, month - 1, day);
-  return date.toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-  });
-}
 const isMobile = window.innerWidth <= 768;
 export default function Events() {
   const [events, setEvents] = useState([]);
@@ -30,34 +20,38 @@ export default function Events() {
     }
     fetchEvents();
   }, []);
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const formattedEvents = useMemo(() => {
-    return events.map((e) => ({
+  const today = dayjs();
+  const formattedEvents = events.map((e) => {
+    const dateObj = dayjs(e.date);
+    return {
       ...e,
-      dateRaw: e.date, // "2025-09-16"
-      date: formatDate(e.date), // "16 Sep"
-      isPastEvent: e.date < todayStr,
-    }));
-  }, [events, todayStr]);
-  const { upcoming, today, past } = useMemo(() => {
-    const upcoming = formattedEvents.filter((e) => e.dateRaw > todayStr);
-    const today = formattedEvents.filter((e) => e.dateRaw === todayStr);
-    const past = formattedEvents.filter((e) => e.dateRaw < todayStr);
-    return { upcoming, today, past };
-  }, [formattedEvents, todayStr]);
+      dateObj,
+      date: dateObj.format("D MMM"),
+    };
+  });
+  const upcoming = formattedEvents.filter((e) =>
+    e.dateObj.isAfter(today, "day")
+  );
 
-  const filteredEvents = useMemo(() => {
-    switch (filter) {
-      case "upcoming":
-        return upcoming;
-      case "today":
-        return today;
-      case "past":
-        return past;
-      default:
-        return formattedEvents;
-    }
-  }, [filter, upcoming, today, past, formattedEvents]);
+  const todayEvents = formattedEvents.filter((e) =>
+    e.dateObj.isSame(today, "day")
+  );
+
+  const past = formattedEvents.filter((e) => e.dateObj.isBefore(today, "day"));
+  let filteredEvents;
+  switch (filter) {
+    case "upcoming":
+      filteredEvents = upcoming;
+      break;
+    case "today":
+      filteredEvents = todayEvents;
+      break;
+    case "past":
+      filteredEvents = past;
+      break;
+    default:
+      filteredEvents = formattedEvents;
+  }
   return (
     <section className="events-section py-5" id="event-section">
       <div className="container">
@@ -100,8 +94,8 @@ export default function Events() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{
-                  duration: isMobile ? 0.9 : 1.2, 
-                  delay: index * (isMobile ? 0.1 : 0.2), 
+                  duration: isMobile ? 0.9 : 1.2,
+                  delay: index * (isMobile ? 0.1 : 0.2),
                   ease: "easeOut",
                 }}
               >
