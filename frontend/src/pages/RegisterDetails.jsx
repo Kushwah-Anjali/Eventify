@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DocumentUploadModal from "../components/DocumentUploadModal";
+import { getAddressFromLatLng } from "../services/locationService";
+
 import {
   FaUpload,
   FaCalendarAlt,
@@ -22,10 +24,28 @@ function RegisterDetails() {
   const [open, setOpen] = useState(false);
   useEffect(() => {
     const load = async () => {
-      setLoading(true);
-      const data = await fetchEvent(eventId);
-      setEvent(data);
-      setLoading(false);
+      try {
+        setLoading(true);
+
+        const data = await fetchEvent(eventId);
+        console.log(data);
+        setEvent(data);
+        if (!data.venue && data.lat != null && data.lng != null) {
+          try {
+            const addr = await getAddressFromLatLng(data.lat, data.lng);
+            setEvent((prev) => ({
+              ...prev,
+              venue: addr,
+            }));
+          } catch (err) {
+            console.error("Address fetch failed", err);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     if (eventId) load();
@@ -36,7 +56,6 @@ function RegisterDetails() {
     const options = { day: "numeric", month: "short", year: "numeric" };
     return new Date(dateString).toLocaleDateString("en-GB", options);
   };
-
 
   return (
     <div className="register-bg" style={{ background: "#0d0d4d" }}>
@@ -152,8 +171,7 @@ function RegisterDetails() {
                             <div>
                               <div className="text-muted small">Event Date</div>
                               <div className="fw-semibold">
-                                {formatEventDate(event.date)
-                              }
+                                {formatEventDate(event.date)}
                               </div>
                             </div>
                           </div>
