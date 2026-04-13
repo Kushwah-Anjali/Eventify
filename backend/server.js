@@ -27,11 +27,9 @@ const historyRoutes = require("./routes/historyRoutes");
 
 const reverseGeo = require("./routes/reverseGeo");
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/users", usersRoutes);

@@ -116,7 +116,7 @@ const Footer = () => {
         </Row>
         <div className="text-center mt-4 pt-3 border-top border-secondary small text-secondary">
           &copy; {new Date().getFullYear()} Eventify. Crafted with{" "}
-          <FaCode className="text-secondary mx-1" /> by <strong>Anju</strong>.
+          <FaCode className="text-secondary mx-1" /> by <strong>Anjali Kushwah</strong>.
         </div>
       </Container>
     </footer>

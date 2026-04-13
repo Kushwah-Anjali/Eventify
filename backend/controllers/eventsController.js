@@ -28,10 +28,9 @@ exports.saveEvent = async (req, res) => {
       latitude,
       longitude,
       existingImage,
-      eventId, // 👈 THIS decides create vs update
+      eventId,
     } = req.body;
 
-    // 🧠 normalize required_docs
     let docsArray = [];
     if (required_docs) {
       if (Array.isArray(required_docs)) docsArray = required_docs;
@@ -46,16 +45,12 @@ exports.saveEvent = async (req, res) => {
         }
       }
     }
-
-    // 🖼 image handling
     let imagePath = null;
     if (req.file) {
       imagePath = req.file.filename;
     } else if (existingImage) {
       imagePath = existingImage.replace(/^.*\/events\//, "");
-    }
-
-    // 🧠 UPDATE FLOW
+    }   
     if (eventId) {
       const updateSql = `
         UPDATE events
@@ -387,6 +382,8 @@ exports.getEventById = async (req, res) => {
         description: event.description,
         date: event.date,
         venue: event.venue,
+        latitude:event.latitude,
+        longitude:event.longitude,
         image: imageUrl,
         fees: event.fees,
         contact: event.contact,

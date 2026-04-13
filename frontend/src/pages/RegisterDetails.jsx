@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DocumentUploadModal from "../components/DocumentUploadModal";
 import { getAddressFromLatLng } from "../services/locationService";
-
 import {
   FaUpload,
   FaCalendarAlt,
@@ -17,7 +16,7 @@ import { fetchEvent } from "../services/fetchEventService";
 function RegisterDetails() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { name, email, eventId, registered_at } = location.state || {};
+  const { name, email, eventId, registered_at, status } = location.state || {};
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -26,13 +25,14 @@ function RegisterDetails() {
     const load = async () => {
       try {
         setLoading(true);
-
         const data = await fetchEvent(eventId);
-        console.log(data);
         setEvent(data);
-        if (!data.venue && data.lat != null && data.lng != null) {
+        if (!data.venue && data.latitude != null && data.longitude != null) {
           try {
-            const addr = await getAddressFromLatLng(data.lat, data.lng);
+            const addr = await getAddressFromLatLng(
+              data.latitude,
+              data.longitude
+            );
             setEvent((prev) => ({
               ...prev,
               venue: addr,
@@ -56,8 +56,7 @@ function RegisterDetails() {
     const options = { day: "numeric", month: "short", year: "numeric" };
     return new Date(dateString).toLocaleDateString("en-GB", options);
   };
-
-  return (
+   return (
     <div className="register-bg" style={{ background: "#0d0d4d" }}>
       <div className="container py-5">
         {/* WRAPPER CARD */}
