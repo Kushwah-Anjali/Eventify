@@ -7,29 +7,27 @@ const cors = require("cors");
 const db = require("./config/db");
 const path = require("path");
 
-
 app.use(
   "/events",
   express.static("D:/Gallery-Event-Management/events") // full absolute path
 );
 app.use("/documents", express.static("D:/Gallery-Event-Management/documents"));
-app.use(
-  "/history",
-  express.static("D:/Gallery-Event-Management/history")
-);
+app.use("/history", express.static("D:/Gallery-Event-Management/history"));
 
 const authRoutes = require("./routes/auth");
 const eventRoutes = require("./routes/events");
 const usersRoutes = require("./routes/users");
 const contactRoutes = require("./routes/contact");
-const registerRoutes = require("./routes/registerRoutes"); 
+const registerRoutes = require("./routes/registerRoutes");
 const historyRoutes = require("./routes/historyRoutes");
-
 const reverseGeo = require("./routes/reverseGeo");
+const aiRoutes = require("./routes/aiRoutes");
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/ai", aiRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/users", usersRoutes);

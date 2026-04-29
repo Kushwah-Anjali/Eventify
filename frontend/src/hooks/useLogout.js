@@ -7,6 +7,6 @@ export default function useLogout() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     sessionStorage.clear();
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 }

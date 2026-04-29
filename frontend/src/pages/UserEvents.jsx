@@ -13,6 +13,7 @@ import {
   FaPlus,
   FaHistory,
   FaCog,
+  FaEnvelope
 } from "react-icons/fa";
 
 import Swal from "sweetalert2";
@@ -75,7 +76,6 @@ const UserEvents = () => {
     try {
       formData.append("user_id", user.id);
 
-      // 👇 THIS is the ONLY difference between add & update
       if (state.editEvent?.id) {
         formData.append("eventId", state.editEvent.id);
       }
@@ -212,8 +212,15 @@ const UserEvents = () => {
     const today = new Date().toISOString().split("T")[0];
     const eventDate = event.date; // make sure this is yyyy-mm-dd format
 
-    // ► PAST EVENTS
-    if (eventDate < today) {
+    // Normalize today's date (important)
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+
+    const eventDateObj = new Date(eventDate);
+    eventDateObj.setHours(0, 0, 0, 0);
+
+    // ► PAST EVENTS (ONLY before today)
+    if (eventDateObj < todayDate) {
       return (
         <div className="d-flex gap-2">
           <button
@@ -235,31 +242,18 @@ const UserEvents = () => {
       );
     }
 
-    // ► TODAY EVENTS
-    if (eventDate === today) {
-      return (
-        <div className="d-flex gap-2">
-          <button
-            className="btn btn-sm btn-outline-danger"
-            title="Delete"
-            onClick={() => handleDeleteEvent(event.id)}
-          >
-            <FaTrash />
-          </button>
-        </div>
-      );
-    }
-
-    // ► FUTURE EVENTS
+    // ► TODAY + FUTURE EVENTS (same behavior)
     return (
       <div className="d-flex gap-2">
-        <button
-          className="btn btn-sm btn-outline-success"
-          title="Edit"
-          onClick={() => handleEditEvent(event)}
-        >
-          <FaEdit />
-        </button>
+        {eventDateObj > todayDate && (
+          <button
+            className="btn btn-sm btn-outline-success"
+            title="Edit"
+            onClick={() => handleEditEvent(event)}
+          >
+            <FaEdit />
+          </button>
+        )}
 
         <button
           className="btn btn-sm btn-outline-danger"
@@ -310,7 +304,7 @@ const UserEvents = () => {
   const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
 
   return (
-    <div className="users-event-page">
+    <div className=" users-event-page">
       <div className="container py-4">
         {/* Dashboard White Card */}
 
@@ -321,7 +315,7 @@ const UserEvents = () => {
               className="d-flex justify-content-between align-items-center dash-head section-header"
               onClick={() => setOpen((prev) => !prev)}
             >
-              <h3 className="text-white d-flex align-items-center gap-2 mb-0 section-title">
+              <h3 className="text-white d-flex align-items-center gap-2 mb-0">
                 <FaUserCircle />
                 My Events Dashboard
               </h3>
@@ -350,7 +344,7 @@ const UserEvents = () => {
                 <InfoBox
                   title="Email"
                   value={user?.email}
-                  icon="bi bi-envelope-fill"
+                  icon={<FaEnvelope  />}
                 />
                 <InfoBox
                   title="Total Events"
@@ -371,7 +365,7 @@ const UserEvents = () => {
                   className="input-group"
                   style={{ minWidth: "200px", maxWidth: "300px" }}
                 >
-                  <span className="input-group-text bg-white">
+                  <span className="input-group-text">
                     <FaSearch />
                   </span>
                   <input
@@ -420,7 +414,7 @@ const UserEvents = () => {
 
               <div className="flex-shrink-0">
                 <button
-                  className="btn btn-custom-dark d-flex align-items-center gap-2 rounded-3 text-light bg-black"
+                  className="btn btn-dark d-flex align-items-center gap-2 rounded-3 text-light bg-dark"
                   onClick={() =>
                     setState((prev) => ({ ...prev, isModalOpen: true }))
                   }
@@ -501,8 +495,7 @@ const UserEvents = () => {
                             title: event.title,
                             category: event.category,
                             date: event.date,
-                                requiredDocs: event?.required_documents || [],
-
+                            requiredDocs: event?.required_documents || [],
                           },
                         })
                       }

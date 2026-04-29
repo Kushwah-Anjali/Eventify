@@ -13,6 +13,8 @@ import {
 } from "react-icons/fa";
 import InfoBox from "../components/InfoBox";
 import { fetchEvent } from "../services/fetchEventService";
+import "../styles/History.css";
+
 function RegisterDetails() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,8 +22,13 @@ function RegisterDetails() {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [open, setOpen] = useState(false);
+
   useEffect(() => {
+    if (!eventId) {
+      setLoading(false);
+      return;
+    }
+
     const load = async () => {
       try {
         setLoading(true);
@@ -29,14 +36,8 @@ function RegisterDetails() {
         setEvent(data);
         if (!data.venue && data.latitude != null && data.longitude != null) {
           try {
-            const addr = await getAddressFromLatLng(
-              data.latitude,
-              data.longitude
-            );
-            setEvent((prev) => ({
-              ...prev,
-              venue: addr,
-            }));
+            const addr = await getAddressFromLatLng(data.latitude, data.longitude);
+            setEvent((prev) => ({ ...prev, venue: addr }));
           } catch (err) {
             console.error("Address fetch failed", err);
           }
@@ -48,7 +49,7 @@ function RegisterDetails() {
       }
     };
 
-    if (eventId) load();
+    load();
   }, [eventId]);
 
   const formatEventDate = (dateString) => {
@@ -56,104 +57,69 @@ function RegisterDetails() {
     const options = { day: "numeric", month: "short", year: "numeric" };
     return new Date(dateString).toLocaleDateString("en-GB", options);
   };
-   return (
-    <div className="register-bg" style={{ background: "#0d0d4d" }}>
-      <div className="container py-5">
-        {/* WRAPPER CARD */}
-        <div className="card shadow-lg border-0 rounded-4 overflow-hidden">
-          {/* BODY */}
-          <div className="card-body bg-light p-4">
-            {/* REGISTRATION CARD */}
-            <div
-              className="d-flex justify-content-between align-items-center dash-head section-header"
-              onClick={() => setOpen((prev) => !prev)}
-            >
-              <h3 className="text-white d-flex align-items-center gap-2 mb-0 section-title">
-                <FaUser />
-                Registeration Summary
-              </h3>
 
+  return (
+    <div className="history-wrapper dark-page-bg">
+      <div className="container py-5">
+        <div className="card shadow-lg rounded-4 overflow-hidden">
+
+          <div className="card-body p-4">
+
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <h3 className="text-info d-flex align-items-center gap-2 mb-0">
+                <FaUser />
+                Registration Summary
+              </h3>
               <button
-                className="btn btn-outline-light icon-btn d-flex align-items-center justify-content-center rounded-3 fw-semibold"
-                style={{ width: "42px", height: "42px" }}
-                onClick={(e) => {
-                  e.stopPropagation(); // IMPORTANT
-                  navigate(-1);
-                }}
+                className="btn btn-outline-info icon-btn rounded-3"
+                onClick={() => navigate(-1)}
               >
                 <FaArrowLeft size={18} />
               </button>
             </div>
-            <div
-              className={`info-section border rounded-4 mb-4 p-3 p-md-4 bg-white ${
-                open ? "show" : ""
-              }`}
-            >
-              <div className="row gy-3">
-                <InfoBox title="Full Name " value={name} icon={<FaUser />} />
-                <InfoBox title="Email" value={email} icon={<FaEnvelope />} />
 
-                <InfoBox
-                  title="Registered On"
-                  value={
-                    registered_at
-                      ? new Date(registered_at).toLocaleDateString()
-                      : "Not available"
-                  }
-                  icon={<FaCalendarAlt />}
-                />
-              </div>
+            <div className="row g-3 mb-4">
+              <InfoBox title="Full Name"     value={name}  icon={<FaUser className="text-info" />} />
+              <InfoBox title="Email"         value={email} icon={<FaEnvelope className="text-info" />} />
+              <InfoBox
+                title="Registered On"
+                value={registered_at ? new Date(registered_at).toLocaleDateString() : "Not available"}
+                icon={<FaCalendarAlt className="text-info" />}
+              />
             </div>
 
-            {/* EVENT DETAILS */}
             {loading ? (
               <div className="text-center py-4">
-                <div
-                  className="spinner-border text-primary"
-                  role="status"
-                ></div>
+                <div className="spinner-border text-info" role="status" />
               </div>
             ) : event ? (
-              <div className="card shadow-lg border-0 bg-white rounded-4 overflow-hidden">
+              <div className="card shadow-lg rounded-4 overflow-hidden">
                 <div className="row g-0 flex-column flex-md-row">
-                  {/* IMAGE */}
+
                   <div className="col-md-4">
                     {event.image && (
                       <img
                         src={event.image}
                         alt={event.title}
-                        className="img-fluid w-100"
-                        style={{
-                          height: "100%",
-                          minHeight: "180px",
-                          maxHeight: "250px",
-                          objectFit: "cover",
-                        }}
+                        className="img-fluid w-100 h-100 object-fit-cover"
+                        style={{ minHeight: "180px", maxHeight: "250px" }}
                       />
                     )}
                   </div>
 
-                  {/* CONTENT */}
                   <div className="col-md-8 d-flex align-items-stretch">
                     <div className="p-3 p-md-4 w-100 d-flex flex-column justify-content-between">
-                      {/* TOP CONTENT */}
                       <div>
                         <div className="d-flex flex-column flex-md-row justify-content-between gap-3">
                           <div>
                             <h4 className="fw-bold mb-2">{event.title}</h4>
-
-                            <p
-                              className="text-secondary lh-base mb-3"
-                              style={{ fontSize: "0.95rem" }}
-                            >
+                            <p className="text-secondary lh-base mb-3" style={{ fontSize: "0.95rem" }}>
                               {event.description}
                             </p>
                           </div>
-
-                          {/* BUTTON */}
-                          <div className="text-md-end">
+                          <div className="text-md-end flex-shrink-0">
                             <button
-                              className="btn btn-dark text-light px-3 py-2 d-inline-flex align-items-center gap-2"
+                              className="btn btn-info text-light px-3 py-2 d-inline-flex align-items-center gap-2"
                               onClick={() => setShowUploadModal(true)}
                             >
                               <FaUpload /> Upload Docs
@@ -161,49 +127,45 @@ function RegisterDetails() {
                           </div>
                         </div>
 
-                        <hr className="my-3" />
+                        <hr className="my-3" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
 
-                        {/* DETAILS */}
                         <div className="row gy-3">
                           <div className="col-12 col-sm-6 d-flex align-items-center gap-3">
-                            <FaCalendarAlt />
+                            <FaCalendarAlt className="text-info" />
                             <div>
-                              <div className="text-muted small">Event Date</div>
-                              <div className="fw-semibold">
-                                {formatEventDate(event.date)}
-                              </div>
+                              <div className="small text-info">Event Date</div>
+                              <div>{formatEventDate(event.date)}</div>
                             </div>
                           </div>
 
                           <div className="col-12 col-sm-6 d-flex align-items-center gap-3">
-                            <FaMapMarkerAlt />
+                            <FaMapMarkerAlt className="text-info" />
                             <div>
-                              <div className="text-muted small">Location</div>
-                              <div className="fw-semibold">{event.venue}</div>
+                              <div className="small text-info">Location</div>
+                              <div>{event.venue}</div>
                             </div>
                           </div>
 
                           <div className="col-12 col-sm-6 d-flex align-items-center gap-3">
-                            <FaUser />
+                            <FaUser className="text-info" />
                             <div>
-                              <div className="text-muted small">Hosted By</div>
-                              <div className="fw-semibold">{event.author}</div>
+                              <div className="small text-info">Hosted By</div>
+                              <div>{event.author}</div>
                             </div>
                           </div>
 
                           <div className="col-12 col-sm-6 d-flex align-items-center gap-3">
-                            <FaMoneyBill />
+                            <FaMoneyBill className="text-info" />
                             <div>
-                              <div className="text-muted small">Entry Fee</div>
-                              <div className="fw-semibold">
-                                {event.fees || "Free"}
-                              </div>
+                              <div className="small text-info">Entry Fee</div>
+                              <div>{event.fees || "Free"}</div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+
                 </div>
               </div>
             ) : (
@@ -211,14 +173,15 @@ function RegisterDetails() {
                 Event details not found.
               </div>
             )}
+
           </div>
 
-          {/* FOOTER */}
-          <div className="card-footer text-center bg-white py-3">
-            <small className="text-muted">
+          <div className="card-footer text-center py-3">
+            <small className="text-info">
               © {new Date().getFullYear()} Eventify
             </small>
           </div>
+
         </div>
 
         {showUploadModal && (
@@ -230,6 +193,7 @@ function RegisterDetails() {
             requiredDocs={event ? event.required_documents : []}
           />
         )}
+
       </div>
     </div>
   );

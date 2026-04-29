@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import {navigate} from "react-router-dom";
 import "../styles/Footer.css";
 import {
   FaFacebookF,

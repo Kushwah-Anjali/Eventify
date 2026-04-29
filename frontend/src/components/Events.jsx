@@ -20,24 +20,20 @@ export default function Events() {
     }
     fetchEvents();
   }, []);
-  const today = dayjs();
+  const today = dayjs().startOf("day");
   const formattedEvents = events.map((e) => {
-    const dateObj = dayjs(e.date);
+    const dateObj = dayjs(e.date).startOf("day");
+
     return {
       ...e,
       dateObj,
       date: dateObj.format("D MMM"),
+      isPastEvent: dateObj.isBefore(today),
     };
   });
-  const upcoming = formattedEvents.filter((e) =>
-    e.dateObj.isAfter(today, "day")
-  );
-
-  const todayEvents = formattedEvents.filter((e) =>
-    e.dateObj.isSame(today, "day")
-  );
-
-  const past = formattedEvents.filter((e) => e.dateObj.isBefore(today, "day"));
+  const upcoming = formattedEvents.filter((e) => e.dateObj.isAfter(today));
+  const todayEvents = formattedEvents.filter((e) => e.dateObj.isSame(today));
+  const past = formattedEvents.filter((e) => e.dateObj.isBefore(today));
   let filteredEvents;
   switch (filter) {
     case "upcoming":

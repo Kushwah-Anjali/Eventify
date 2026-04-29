@@ -57,7 +57,6 @@ export default function AddEventModal({
   const [errors, setErrors] = useState({});
   const [preview, setPreview] = useState(null);
 
-  
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
     return () => {
@@ -118,7 +117,49 @@ export default function AddEventModal({
       setErrors({});
     }
   }, [isOpen, existingData, isEditing]);
+const handleAIGenerate = async () => {
+  if (!data.title) {
+    return Swal.fire({
+      icon: "warning",
+      title: "Title required",
+      text: "Enter title first",
+    });
+  }
 
+  try {
+    const res = await fetch(`${Base_Url}/api/ai/generate-description`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: data.title,
+        category: data.category?.label || "",
+      }),
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result?.error || `HTTP ${res.status}`);
+    }
+
+    if (!result.success) {
+      throw new Error(result?.error || "AI generation failed");
+    }
+
+    setData((d) => ({
+      ...d,
+      description: result.text,
+    }));
+
+  } catch (err) {
+    console.error("AI ERROR:", err);
+    Swal.fire({
+      icon: "error",
+      title: "AI Failed",
+      text: err.message,
+    });
+  }
+};
   const handleChange = (e) => {
     const { name, value, files, checked } = e.target;
     let updatedValue = value;
@@ -404,13 +445,22 @@ export default function AddEventModal({
                 <label className="form-label fw-semibold">
                   <FaAlignLeft className="me-2 text-primary" /> Description
                 </label>
-                <textarea
-                  name="description"
-                  value={data.description}
-                  onChange={handleChange}
-                  className="form-control mb-3"
-                  rows="3"
-                />
+                <div>
+                  <textarea
+                    name="description"
+                    value={data.description}
+                    onChange={handleChange}
+                    className="form-control mb-3"
+                    rows="3"
+                  />
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm mb-3"
+                    onClick={handleAIGenerate}
+                  >
+                    Generate with AI
+                  </button>
+                </div>
 
                 <label className="form-label fw-semibold">
                   <FaCalendar className="me-2 text-primary" /> Date{" "}
@@ -459,13 +509,7 @@ export default function AddEventModal({
                   <input
                     type="text"
                     name="venue"
-                    value={
-                      data.venue
-                        ? data.venue
-                        : data.latitude && data.longitude
-                        ? `Lat: ${data.latitude}, Lng: ${data.longitude}`
-                        : ""
-                    }
+                    value={data.venue || ""}
                     className={`form-control ${
                       errors.venue ? "is-invalid" : ""
                     }`}

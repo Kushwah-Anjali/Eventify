@@ -11,6 +11,19 @@ exports.getAllEvents = async (req, res) => {
   }
 };
 
+const resolveAddress = async (lat, lng) => {
+  try {
+    const BASE_URL = `http://localhost:${process.env.PORT || 5000}`;
+    const res = await fetch(
+      `${BASE_URL}/api/reverse-geo?lat=${lat}&lng=${lng}`
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.display_name || null;
+  } catch {
+    return null;
+  }
+};
 
 exports.saveEvent = async (req, res) => {
   try {
@@ -30,7 +43,14 @@ exports.saveEvent = async (req, res) => {
       existingImage,
       eventId,
     } = req.body;
-
+    let resolvedVenue = venue || "";
+    if (latitude && longitude) {
+      const geocoded = await resolveAddress(latitude, longitude);
+      if (geocoded) {
+        resolvedVenue = geocoded; // ✅ use the real address
+      }
+      // if geocoding failed, resolvedVenue stays as whatever frontend sent
+    }
     let docsArray = [];
     if (required_docs) {
       if (Array.isArray(required_docs)) docsArray = required_docs;
@@ -50,7 +70,7 @@ exports.saveEvent = async (req, res) => {
       imagePath = req.file.filename;
     } else if (existingImage) {
       imagePath = existingImage.replace(/^.*\/events\//, "");
-    }   
+    }
     if (eventId) {
       const updateSql = `
         UPDATE events
@@ -65,7 +85,7 @@ exports.saveEvent = async (req, res) => {
         description,
         date,
         author,
-        venue,
+        resolvedVenue,
         fees,
         contact,
         imagePath,
@@ -94,7 +114,7 @@ exports.saveEvent = async (req, res) => {
       description,
       date,
       author,
-      venue,
+      resolvedVenue,
       fees,
       contact,
       imagePath,
@@ -117,7 +137,7 @@ exports.saveEvent = async (req, res) => {
         description,
         date,
         author,
-        venue,
+        venue: resolvedVenue,
         fees,
         contact,
         required_documents: docsArray,
@@ -135,7 +155,6 @@ exports.saveEvent = async (req, res) => {
     });
   }
 };
-
 
 exports.deleteEvent = async (req, res) => {
   try {
@@ -228,15 +247,14 @@ exports.getUserEvents = async (req, res) => {
         ? `${req.protocol}://${req.get("host")}/events/${r.image}`
         : null;
 
-   return { 
-  ...r,
-  required_documents: docs,
-  image: imageUrl,
-  latitude: r.latitude,
-  longitude: r.longitude,
-  venue: r.venue
-};
-
+      return {
+        ...r,
+        required_documents: docs,
+        image: imageUrl,
+        latitude: r.latitude,
+        longitude: r.longitude,
+        venue: r.venue,
+      };
     });
 
     res.json({ status: "success", events: normalized });
@@ -332,10 +350,14 @@ function parseMediaLinks(media_links, req) {
     if (Array.isArray(media)) {
       const photos = media
         .filter((m) => m.type === "photo")
-        .map((m) => `${req.protocol}://${req.get("host")}/history/photos/${m.url}`);
+        .map(
+          (m) => `${req.protocol}://${req.get("host")}/history/photos/${m.url}`
+        );
       const videos = media
         .filter((m) => m.type === "video")
-        .map((m) => `${req.protocol}://${req.get("host")}/history/videos/${m.url}`);
+        .map(
+          (m) => `${req.protocol}://${req.get("host")}/history/videos/${m.url}`
+        );
       return { photos, videos };
     }
 
@@ -353,7 +375,6 @@ function parseMediaLinks(media_links, req) {
     return { photos: [], videos: [] };
   }
 }
-
 
 exports.getEventById = async (req, res) => {
   try {
@@ -382,8 +403,8 @@ exports.getEventById = async (req, res) => {
         description: event.description,
         date: event.date,
         venue: event.venue,
-        latitude:event.latitude,
-        longitude:event.longitude,
+        latitude: event.latitude,
+        longitude: event.longitude,
         image: imageUrl,
         fees: event.fees,
         contact: event.contact,

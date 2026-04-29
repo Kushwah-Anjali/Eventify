@@ -7,7 +7,7 @@ export default function LogoutButton() {
 
   return (
     <button
-      className="btn btn-outline-light d-flex align-items-center justify-content-center rounded-3 fw-semibold"
+                className="btn btn-outline-light icon-btn rounded-3"
       onClick={logout}
       style={{ width: "42px", height: "42px" }}
     >

@@ -26,7 +26,6 @@ export default function EventsCard({ event }) {
         event.isPastEvent ? "past-event" : ""
       }`}
     >
-      {/* Image Section */}
       <div className="position-relative overflow-hidden">
         {event.image ? (
           <img

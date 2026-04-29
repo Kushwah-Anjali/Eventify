@@ -3,7 +3,6 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 export default function MapPicker({ onSelect, initialPosition, height = 300 }) {
   const [markerPos, setMarkerPos] = useState(null);
-  console.log(process.env.REACT_APP_GOOGLE_MAPS_KEY);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "",
   });

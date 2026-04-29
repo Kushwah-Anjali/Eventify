@@ -67,8 +67,8 @@ const Contact = () => {
                 alert.variant === "success"
                   ? "linear-gradient(135deg,#007bff,#6f42c1)"
                   : alert.variant === "danger"
-                  ? "#dc3545"
-                  : "#ffc107",
+                    ? "#dc3545"
+                    : "#ffc107",
             }}
           >
             <i
@@ -76,8 +76,8 @@ const Contact = () => {
                 alert.variant === "success"
                   ? "fa-check-circle"
                   : alert.variant === "danger"
-                  ? "fa-times-circle"
-                  : "fa-exclamation-triangle"
+                    ? "fa-times-circle"
+                    : "fa-exclamation-triangle"
               } me-2`}
             ></i>
             <span>{alert.message}</span>
@@ -128,14 +128,14 @@ const Contact = () => {
                   <h6 className="fw-bold mb-1">
                     <i className="fas fa-phone-alt me-2"></i> Phone
                   </h6>
-                  <p className="opacity-75 mb-0">+91 98765 43210</p>
+                  <p className="opacity-75 mb-0">+91 12345 67890</p>
                 </div>
 
                 <div className="mb-3">
                   <h6 className="fw-bold mb-1">
                     <i className="fas fa-envelope me-2"></i> Email
                   </h6>
-                  <p className="opacity-75 mb-0">support@eventmanager.com</p>
+                  <p className="opacity-75 mb-0">support@eventify.com</p>
                 </div>
               </div>
 

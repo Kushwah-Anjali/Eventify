@@ -21,6 +21,7 @@ export default function UserModal({ show, onClose, onSave, editUser }) {
     else setForm({ id: "", name: "", email: "", password: "", role: "admin" });
   }, [editUser, show]);
 
+
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -37,11 +38,7 @@ export default function UserModal({ show, onClose, onSave, editUser }) {
 
   return (
     // Modal overlay with blur
-    <div
-      className="modal fade show d-block"
-      tabIndex="-1"
-      
-    >
+    <div className="modal fade show d-block" tabIndex="-1">
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content border-0 shadow-lg rounded-4">
           {/* Header */}
@@ -75,7 +72,9 @@ export default function UserModal({ show, onClose, onSave, editUser }) {
                 <label className="form-label fw-semibold">
                   <FaUser className="text-primary me-2" />
                   Full Name
+                  <span className="star">*</span>
                 </label>
+
                 <input
                   type="text"
                   className="form-control"
@@ -89,8 +88,9 @@ export default function UserModal({ show, onClose, onSave, editUser }) {
 
               <div className="mb-3">
                 <label className="form-label fw-semibold">
-                  <FaEnvelope className="text-primary me-2" />
+                  <FaEnvelope className="me-2 text-primary" />
                   Email Address
+                  <span className="star">*</span>
                 </label>
                 <input
                   type="email"
@@ -128,7 +128,10 @@ export default function UserModal({ show, onClose, onSave, editUser }) {
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary rounded-pill px-3">
+                <button
+                  type="submit"
+                  className="btn btn-primary rounded-pill px-3"
+                >
                   {form.id ? "Update User" : "Add User"}
                 </button>
               </div>
