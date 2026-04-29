@@ -57,6 +57,7 @@ export default function AddEventModal({
   const [errors, setErrors] = useState({});
   const [preview, setPreview] = useState(null);
 
+  
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
     return () => {
@@ -537,7 +538,7 @@ export default function AddEventModal({
                 </div>
 
                 <label className="form-label fw-semibold">
-                  <FaPhone className="me-2 text-primary" /> Contact{" "}
+                  <FaPhone className="me-2 text-primary" /> Contact
                   <span className="star">*</span>
                 </label>
                 <div className="d-flex align-items-center mb-3">
