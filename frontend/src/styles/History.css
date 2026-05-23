@@ -1,0 +1,41 @@
+.event-history-page .eh-hero {
+  height: 260px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+}
+
+.event-history-page .fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.35s ease-out;
+}
+.event-history-page .fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.history-wrapper {
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+}
+
+.history-wrapper .card,
+.history-wrapper .card-body,
+.history-wrapper .card-footer {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: white;
+}
+
+.history-wrapper .card {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px;
+}
+
+.history-wrapper .card-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.history-wrapper h5 {
+  color: #4cc9f0;
+}

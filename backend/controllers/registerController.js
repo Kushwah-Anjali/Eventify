@@ -109,7 +109,7 @@ exports.sendOtp = async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: `"Event Manager" <${process.env.EMAIL_USER}>`,
+      from: `"Eventify" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "🔐 Your OTP Code",
       html: `
@@ -136,7 +136,7 @@ exports.sendOtp = async (req, res) => {
 
         <hr/>
         <p style="color:#888;font-size:12px;">
-          Event Manager • Secure Verification 🔐
+          Eventify • Secure Verification 🔐
         </p>
       </div>
     </div>

@@ -42,7 +42,7 @@ router.post("/", async (req, res) => {
 
     // Auto reply to user
     const autoReply = {
-      from: `"Event Manager" <${process.env.EMAIL_USER}>`,
+      from: `"Eventify" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "✅ We’ve received your message!",
       html: `
@@ -52,9 +52,9 @@ router.post("/", async (req, res) => {
             <h2 style="color:#007bff;">Thanks for Reaching Out!</h2>
             <p style="color:#555;">Hey <b>${name}</b>, your message has been received by our team.</p>
             <p style="font-style:italic;">"${message}"</p>
-            <p>We’ll get back to you within 24 hours 🚀</p>
+            <p>We’ll get back to you within 24 hours !</p>
             <hr/>
-            <p style="color:#888;font-size:12px;">Event Manager • Mumbai, India</p>
+            <p style="color:#888;font-size:12px;">St. John's College, Agra</p>
           </div>
         </div>
       `,

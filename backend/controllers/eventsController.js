@@ -47,9 +47,9 @@ exports.saveEvent = async (req, res) => {
     if (latitude && longitude) {
       const geocoded = await resolveAddress(latitude, longitude);
       if (geocoded) {
-        resolvedVenue = geocoded; // ✅ use the real address
+        resolvedVenue = geocoded; 
       }
-      // if geocoding failed, resolvedVenue stays as whatever frontend sent
+     
     }
     let docsArray = [];
     if (required_docs) {
@@ -101,7 +101,7 @@ exports.saveEvent = async (req, res) => {
       });
     }
 
-    // 🧠 CREATE FLOW
+    
     const insertSql = `
       INSERT INTO events
       (title, category, description, date, author, venue, fees, contact, image, required_documents, users, latitude, longitude)
@@ -159,8 +159,6 @@ exports.saveEvent = async (req, res) => {
 exports.deleteEvent = async (req, res) => {
   try {
     const eventId = req.params.id;
-
-    // Step 1️⃣ : Fetch event to get its image name
     const [rows] = await db.execute("SELECT image FROM events WHERE id = ?", [
       eventId,
     ]);
@@ -172,7 +170,6 @@ exports.deleteEvent = async (req, res) => {
         .json({ status: "error", message: "Event not found" });
     }
 
-    // Step 2️⃣ : Delete the event record from DB
     const [result] = await db.execute("DELETE FROM events WHERE id = ?", [
       eventId,
     ]);
@@ -182,13 +179,12 @@ exports.deleteEvent = async (req, res) => {
         .json({ status: "error", message: "Event not deleted" });
     }
 
-    // Step 3️⃣ : Delete the image from disk
     if (event.image) {
-      const imageFileName = path.basename(event.image); // e.g. 1761662100722.png
+      const imageFileName = path.basename(event.image);
       const imagePath = path.join(
         "D:/Gallery-Event-Management/events",
         imageFileName
-      ); // ✅ exact folder
+      ); 
 
       fs.unlink(imagePath, (err) => {
         if (err) {
@@ -199,13 +195,12 @@ exports.deleteEvent = async (req, res) => {
       });
     }
 
-    // Step 4️⃣ : Respond success
     res.json({
       status: "success",
       message: "Event and associated image deleted successfully!",
     });
   } catch (err) {
-    console.error("❌ Delete Event Error:", err);
+    console.error(" Delete Event Error:", err);
     res.status(500).json({
       status: "error",
       message: "Server error while deleting event",
@@ -213,7 +208,6 @@ exports.deleteEvent = async (req, res) => {
   }
 };
 
-// Get user events
 exports.getUserEvents = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -266,7 +260,6 @@ exports.getUserEvents = async (req, res) => {
   }
 };
 
-// Get all events + history
 exports.getHistory = async (req, res) => {
   try {
     const sql = `
