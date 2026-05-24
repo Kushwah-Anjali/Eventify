@@ -37,10 +37,9 @@ app.use("/api/history", historyRoutes);
 app.use("/api/reverse-geo", reverseGeo);
 
 const PORT = process.env.PORT;
-// Setup database tables route
 app.get('/setup-database', async (req, res) => {
   try {
-    await db.query(`
+    const [result1] = await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         id int UNSIGNED NOT NULL AUTO_INCREMENT,
         name varchar(100) NOT NULL,
@@ -53,7 +52,7 @@ app.get('/setup-database', async (req, res) => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
     `);
 
-    await db.query(`
+    const [result2] = await db.query(`
       CREATE TABLE IF NOT EXISTS events (
         id int NOT NULL AUTO_INCREMENT,
         title varchar(255) DEFAULT NULL,
@@ -73,7 +72,7 @@ app.get('/setup-database', async (req, res) => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
     `);
 
-    await db.query(`
+    const [result3] = await db.query(`
       CREATE TABLE IF NOT EXISTS registrations (
         id int NOT NULL AUTO_INCREMENT,
         name varchar(100) DEFAULT NULL,
@@ -85,7 +84,7 @@ app.get('/setup-database', async (req, res) => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
     `);
 
-    await db.query(`
+    const [result4] = await db.query(`
       CREATE TABLE IF NOT EXISTS history (
         id int NOT NULL AUTO_INCREMENT,
         event_id int NOT NULL,
@@ -102,8 +101,12 @@ app.get('/setup-database', async (req, res) => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
     `);
 
-    res.json({ message: 'Database tables created successfully!' });
+    res.json({ 
+      message: 'Database tables created successfully!',
+      tables: ['users', 'events', 'registrations', 'history']
+    });
   } catch (error) {
+    console.error('Database setup error:', error);
     res.status(500).json({ error: error.message });
   }
 });
